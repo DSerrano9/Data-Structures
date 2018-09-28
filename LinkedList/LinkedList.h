@@ -25,6 +25,7 @@ namespace Dennis_Serrano
 		void addToEnd(T element);
 		void clear();
 		T get(int index);
+		T& at(int index);
 		int size();
 		int find(T element, int occurrence);
 		bool remove(int index);
@@ -120,7 +121,33 @@ namespace Dennis_Serrano
 			Node<T>* p = this->head;
 			while (p != nullptr)
 			{
-				if (i++ == index) { return p->data; }
+				if (i++ == index)
+				{
+					return p->data;
+				}
+				else { p = p->next; }
+			}
+		}
+		throw std::out_of_range("Out of Range Index");
+	}
+
+	/*
+	Description: Returns the element at the specified index.
+	*/
+	template <class T>
+	T& LinkedList<T>::at(int index)
+	{
+		if ((index >= 0) && (index < this->listSize))
+		{
+			int i = 0;
+			Node<T>* p = this->head;
+			while (p != nullptr)
+			{
+				if (i++ == index)
+				{
+					T& ref = p->data;
+					return ref;
+				}
 				else { p = p->next; }
 			}
 		}
