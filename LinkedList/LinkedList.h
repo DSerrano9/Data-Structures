@@ -110,7 +110,8 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Description: Returns the element at the specified index.
+	Description: Returns a copy of the element's value at
+	the specified index.
 	*/
 	template <class T>
 	T LinkedList<T>::get(int index)
@@ -132,7 +133,8 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Description: Returns the element at the specified index.
+	Description: Returns a reference to the element's value 
+	at the specified index.
 	*/
 	template <class T>
 	T& LinkedList<T>::at(int index)
