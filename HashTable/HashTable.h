@@ -22,7 +22,7 @@ namespace Dennis_Serrano
 		bool operator ==(HashState& state)
 		{
 			return this->key == state.key;
-		}		
+		}
 	};
 
 	template <class T>
@@ -54,14 +54,14 @@ namespace Dennis_Serrano
 	};
 
 	/*
-	Description: Allocates the HashTable object with 
+	Description: Allocates the HashTable object with
 	a table size of fifty.
 	*/
 	template <class T>
 	HashTable<T>::HashTable()
 	{
 		this->table = new std::vector<HashNode<T>>(50);
-	} 
+	}
 
 	/*
 	Description: Allocates the HashTable object with
@@ -79,7 +79,7 @@ namespace Dennis_Serrano
 	template <class T>
 	HashTable<T>::~HashTable()
 	{
-		for (int i = 0; i < this->table->size(); i++)
+		for (unsigned int i = 0; i < this->table->size(); i++)
 		{
 			if (this->table->at(i).values != nullptr)
 			{
@@ -174,7 +174,7 @@ namespace Dennis_Serrano
 	value.
 	*/
 	template <class T>
-	T HashTable<T>::get(std::string key) 
+	T HashTable<T>::get(std::string key)
 	{
 		char* charArray = this->to_CharArray(key);
 		int index = this->bernsteinHashFunction(charArray);
@@ -195,7 +195,7 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Description: Returns a reference to the specified 
+	Description: Returns a reference to the specified
 	key's value.
 	*/
 	template <class T>
@@ -245,7 +245,7 @@ namespace Dennis_Serrano
 	char* HashTable<T>::to_CharArray(std::string str)
 	{
 		char* c = new char[str.length() + 1];
-		for (int i = 0; i < str.length(); i++)
+		for (unsigned int i = 0; i < str.length(); i++)
 		{
 			c[i] = str[i];
 		}
