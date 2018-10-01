@@ -43,10 +43,10 @@ namespace Dennis_Serrano
 		HashTable(int size);
 		~HashTable();
 		void clear();
-		void add(std::string key, T value);
-		void remove(std::string key);
 		T get(std::string key);
 		T& at(std::string key);
+		bool add(std::string key, T value);
+		bool remove(std::string key);
 	private:
 		std::vector<HashNode<T>>* table;
 		int bernsteinHashFunction(char* c);
@@ -103,73 +103,6 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Description: Adds the specified key and value
-	to the table.
-	*/
-	template <class T>
-	void HashTable<T>::add(std::string key, T value)
-	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
-		if (this->table->at(index).values == nullptr)
-		{
-			this->table->at(index).values = new LinkedList<HashState<T>>();
-		}
-		else
-		{
-			int size = this->table->at(index).values->size();
-			for (int i = 0; i < size; i++)
-			{
-				if (this->table->at(index).values->at(i).key == key)
-				{
-					this->table->at(index).values->at(i).count++;
-					return;
-				}
-			}
-		}
-		this->table->at(index).values->addToFront(HashState<T>(1, key, value));
-		return;
-	}
-
-	/*
-	Description: Removes the value with the specified key
-	from the table.
-	*/
-	template <class T>
-	void HashTable<T>::remove(std::string key)
-	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
-		if (this->table->at(index).values != nullptr)
-		{
-			int size = this->table->at(index).values->size();
-			for (int i = 0; i < size; i++)
-			{
-				if (this->table->at(index).values->at(i).key == key)
-				{
-					this->table->at(index).values->at(i).count--;
-					if (this->table->at(index).values->at(i).count == 0)
-					{
-						this->table->at(index).values->remove(
-							this->table->at(index).values->at(i), 1);
-					}
-					if (this->table->at(index).values->size() == 0)
-					{
-						delete this->table->at(index).values;
-						this->table->at(index).values = nullptr;
-					}
-					return;
-				}
-			}
-		}
-		return;
-	}
-
-	/*
 	Description: Returns a copy of the specified key's
 	value.
 	*/
@@ -217,6 +150,81 @@ namespace Dennis_Serrano
 			}
 		}
 		throw std::exception("Nonexistent Key");
+	}
+
+	/*
+	Description: Adds the specified key and value
+	to the table if and only if the key hasn't 
+	already been added with a different value.
+	If added, the function returns true; otherwise,
+	false.
+	*/
+	template <class T>
+	bool HashTable<T>::add(std::string key, T value)
+	{
+		char* charArray = this->to_CharArray(key);
+		int index = this->bernsteinHashFunction(charArray);
+		delete charArray;
+
+		if (this->table->at(index).values == nullptr)
+		{
+			this->table->at(index).values = new LinkedList<HashState<T>>();
+		}
+		else
+		{
+			int size = this->table->at(index).values->size();
+			for (int i = 0; i < size; i++)
+			{
+				if (this->table->at(index).values->at(i).key == key)
+				{
+					if (this->table->at(index).values->at(i).value == value)
+					{
+						this->table->at(index).values->at(i).count++;
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		this->table->at(index).values->addToFront(HashState<T>(1, key, value));
+		return true;
+	}
+
+	/*
+	Description: Removes the value with the specified key
+	from the table and returns true; otherwise, false.
+	*/
+	template <class T>
+	bool HashTable<T>::remove(std::string key)
+	{
+		char* charArray = this->to_CharArray(key);
+		int index = this->bernsteinHashFunction(charArray);
+		delete charArray;
+
+		if (this->table->at(index).values != nullptr)
+		{
+			int size = this->table->at(index).values->size();
+			for (int i = 0; i < size; i++)
+			{
+				if (this->table->at(index).values->at(i).key == key)
+				{
+					this->table->at(index).values->at(i).count--;
+					if (this->table->at(index).values->at(i).count == 0)
+					{
+						this->table->at(index).values->remove(
+							this->table->at(index).values->at(i), 1);
+
+						if (this->table->at(index).values->size() == 0)
+						{
+							delete this->table->at(index).values;
+							this->table->at(index).values = nullptr;
+						}
+					}
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/*
