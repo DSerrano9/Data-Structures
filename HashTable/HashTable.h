@@ -241,7 +241,7 @@ namespace Dennis_Serrano
 			hashVal *= 33;
 			hashVal += static_cast<int>(*p++);
 		}
-		hashVal %= strlen(c);
+		hashVal %= this->table->size();
 		return hashVal;
 	}
 
