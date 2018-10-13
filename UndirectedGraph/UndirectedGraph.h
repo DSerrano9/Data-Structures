@@ -114,7 +114,7 @@ namespace Dennis_Serrano
 
 	/*
 	Description: Adds the specified vertex to the
-	adjacency list.
+	adjacency list, if not already added.
 	*/
 	template <class T>
 	void UndirectedGraph<T>::addVertex(T vertex)
