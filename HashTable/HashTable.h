@@ -11,11 +11,10 @@ namespace Dennis_Serrano
 	struct HashState
 	{
 		T value;
-		unsigned int count;
 		const std::string key;
 
-		HashState(int count, std::string key, T value)
-			: count(count), key(key), value(value)
+		HashState(std::string key, T value) 
+			: key(key), value(value)
 		{
 
 		}
@@ -147,8 +146,8 @@ namespace Dennis_Serrano
 
 	/*
 	Description: Adds the specified key and value
-	to the table if and only if the key hasn't 
-	already been added with a different value.
+	to the table if and only if the key doesn't 
+	already exist in the table.
 	If added, the function returns true; otherwise,
 	false.
 	*/
@@ -167,16 +166,11 @@ namespace Dennis_Serrano
 			{
 				if (this->table->at(index).values->at(i).key == key)
 				{
-					if (this->table->at(index).values->at(i).value == value)
-					{
-						this->table->at(index).values->at(i).count++;
-						return true;
-					}
 					return false;
 				}
 			}
 		}
-		this->table->at(index).values->addToFront(HashState<T>(1, key, value));
+		this->table->at(index).values->addToFront(HashState<T>(key, value));
 		return true;
 	}
 
@@ -195,17 +189,13 @@ namespace Dennis_Serrano
 			{
 				if (this->table->at(index).values->at(i).key == key)
 				{
-					this->table->at(index).values->at(i).count--;
-					if (this->table->at(index).values->at(i).count == 0)
-					{
-						this->table->at(index).values->remove(
-							this->table->at(index).values->at(i), 1);
+					this->table->at(index).values->remove(
+						this->table->at(index).values->at(i), 1);
 
-						if (this->table->at(index).values->size() == 0)
-						{
-							delete this->table->at(index).values;
-							this->table->at(index).values = nullptr;
-						}
+					if (this->table->at(index).values->size() == 0)
+					{
+						delete this->table->at(index).values;
+						this->table->at(index).values = nullptr;
 					}
 					return true;
 				}
@@ -215,15 +205,15 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Credit to: 
-	Weiss, Mark. Allen. Data Structures
+	Description: Hash algorithm.
+	Credit to: Weiss, Mark. Allen. Data Structures
 	and Algorithm Analysis in C++ Third Edition.
 	*/
 	template <class T>
 	int HashTable<T>::hashFunction(std::string key, int tablesize)
 	{
 		int hashVal = 0;
-		for (int i = 0; i < key.length(); i++)
+		for (unsigned int i = 0; i < key.length(); i++)
 		{
 			hashVal = 37 * hashVal + key[i];
 		}
