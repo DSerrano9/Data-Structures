@@ -49,8 +49,7 @@ namespace Dennis_Serrano
 		bool remove(std::string key);
 	private:
 		std::vector<HashNode<T>>* table;
-		int bernsteinHashFunction(char* c);
-		char* to_CharArray(std::string str);
+		int hashFunction(std::string key, int tablesize);
 	};
 
 	/*
@@ -109,10 +108,7 @@ namespace Dennis_Serrano
 	template <class T>
 	T HashTable<T>::get(std::string key)
 	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
+		int index = this->hashFunction(key, this->table->size());
 		if (this->table->at(index).values != nullptr)
 		{
 			int size = this->table->at(index).values->size();
@@ -133,11 +129,8 @@ namespace Dennis_Serrano
 	*/
 	template <class T>
 	T& HashTable<T>::at(std::string key)
-	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
+	{	
+		int index = this->hashFunction(key, this->table->size());
 		if (this->table->at(index).values != nullptr)
 		{
 			int size = this->table->at(index).values->size();
@@ -162,10 +155,7 @@ namespace Dennis_Serrano
 	template <class T>
 	bool HashTable<T>::add(std::string key, T value)
 	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
+		int index = this->hashFunction(key, this->table->size());
 		if (this->table->at(index).values == nullptr)
 		{
 			this->table->at(index).values = new LinkedList<HashState<T>>();
@@ -197,10 +187,7 @@ namespace Dennis_Serrano
 	template <class T>
 	bool HashTable<T>::remove(std::string key)
 	{
-		char* charArray = this->to_CharArray(key);
-		int index = this->bernsteinHashFunction(charArray);
-		delete charArray;
-
+		int index = this->hashFunction(key, this->table->size());
 		if (this->table->at(index).values != nullptr)
 		{
 			int size = this->table->at(index).values->size();
@@ -228,37 +215,24 @@ namespace Dennis_Serrano
 	}
 
 	/*
-	Description: An algorithm produced by Professor
-	Daniel J. Bernstein.
+	Credit to: 
+	Weiss, Mark. Allen. Data Structures
+	and Algorithm Analysis in C++ Third Edition.
 	*/
 	template <class T>
-	int HashTable<T>::bernsteinHashFunction(char* c)
+	int HashTable<T>::hashFunction(std::string key, int tablesize)
 	{
-		char *p = c;
-		int hashVal = 5381;
-		while (*p)
+		int hashVal = 0;
+		for (int i = 0; i < key.length(); i++)
 		{
-			hashVal *= 33;
-			hashVal += static_cast<int>(*p++);
+			hashVal = 37 * hashVal + key[i];
 		}
-		hashVal %= this->table->size();
+		hashVal %= tablesize;
+		if (hashVal < 0)
+		{
+			hashVal += tablesize;
+		}
 		return hashVal;
-	}
-
-	/*
-	Description: Returns the parameter-supplied string as a
-	char*.
-	*/
-	template <class T>
-	char* HashTable<T>::to_CharArray(std::string str)
-	{
-		char* c = new char[str.length() + 1];
-		for (unsigned int i = 0; i < str.length(); i++)
-		{
-			c[i] = str[i];
-		}
-		c[str.length()] = '\0';
-		return c;
 	}
 }
 #endif // ! hashTableClass
